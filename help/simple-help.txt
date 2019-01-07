@@ -1,0 +1,13 @@
+############################
+#                          #
+#   Welcome to DearDiary   #
+#                          #
+############################
+
+This simple command line logger can be used to record keeping by people who like to keep things simple. For detailed instructions type 'deardiary help' or visit http://github.com/geraintanderson.
+
+To start a new diary, type
+  deardiary init
+
+To create a diary entry, type
+  deardiary e "Your diary entry here"

@@ -1,0 +1,13 @@
+Use the deardiary command followed by an option and value if required. The options are as follows.
+
+To view the help file
+  deardiary help
+
+To start a new diary, type
+  deardiary init
+
+To view the configuration, use
+  deardiary getconfig
+
+To view a specific configuration value, pass the configuration key as a parameter.
+  deardiary getconfig active_diary
