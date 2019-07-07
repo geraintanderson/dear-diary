@@ -11,7 +11,7 @@ my %paths = (
 if (!scalar @ARGV) {
   open (my $fh, '<', $paths{'simple_help'}) or die "Can't open simple-help.txt. Please raise a bug on $repo_url\n$!";
   print readline($fh);
-  
+
 } elsif ($ARGV[0] eq 'init') {
   # SET UP. Use OO to create a new diary?
   print "Creating a new diary...\n";
@@ -42,14 +42,24 @@ if (!scalar @ARGV) {
 } elsif ($ARGV[0] eq 'use') {
   # Make the currently active diary equal to $ARGV[1]
   # XXX Check this diary actually exists before switching!
-  update_config('active_diary', $ARGV[1]);
+
+  my @diaries = get_diaries();
+  my $switched;
+  foreach my $diary (@diaries) {
+    if ($diary eq $ARGV[1]) {
+      update_config('active_diary', $ARGV[1]);
+      $switched = 1;
+      last;
+    }
+  }
+  unless ($switched) {
+    print "A diary with that name does not exist. Create it with the init command.\n";
+  }
 
 } elsif ($ARGV[0] eq 'list') {
-  my $pm = "$paths{'diaries'}/*.psv";
-  my @files = glob($pm);
-  foreach my $file (@files) {
-    my @fragments = split(/[\/\.]/, $file);
-    print "$fragments[1]\n";
+  my @diaries = get_diaries();
+  foreach my $diary (@diaries) {
+    print "$diary\n";
   }
 
 } elsif ($ARGV[0] eq 'getconfig') {
@@ -88,6 +98,19 @@ sub create_diary_entry {
   my $message = $timestamp.'|'.$entry_text;
   print $fh $message;
   close($fh) or "Could not close the diary file: $!";
+}
+
+sub get_diaries {
+  # Gets a list of all diaries
+  my $pm = "$paths{'diaries'}/*.psv";
+  my @file_paths = glob($pm);
+  my @files = ();
+  foreach my $file (@file_paths) {
+    my @fragments = split(/[\/\.]/, $file);
+    # print "$fragments[1]\n";
+    push (@files, $fragments[1]);
+  }
+  return @files;
 }
 
 sub update_config {
